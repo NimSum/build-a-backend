@@ -70,4 +70,35 @@ app.post('/api/v1/manufacturers', (req, res) => {
     .catch(error => res.status(500).json({ error }))
 })
 
+app.post('/api/v1/cars', (req, res) => {
+  const newCar = req.body;
+  const format = [
+    'manuf_id', 
+    'model', 
+    'top_speed', 
+    'acceleration', 
+    'capacity', 
+    'charge_time', 
+    'range', 
+    'date_and_sales'
+  ]
 
+  for (let requiredParam of format) {
+    if (!newCar[requiredParam] && newCar[requiredParam] !== "" ) {
+      res.status(422).json({ error: 
+        `Expected format of ${format.join(', ')}. Missing: ${ requiredParam }`})
+    }
+  }
+
+  database('cars')
+    .select()
+    .then((cars) => {
+      if (cars.some(car => car.model === newCar.model)) {
+        res.status(500).json({ error: 'Car already exists' })
+      }
+    })
+
+  database('cars').insert(newCar, 'id')
+    .then(car => res.status(201).json(car))
+    .catch(error => res.status(500).json({ error }))
+})
