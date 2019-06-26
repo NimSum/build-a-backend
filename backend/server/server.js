@@ -29,3 +29,10 @@ app.get('/api/v1/manufacturers/:id', (req, res) => {
     })
     .catch(error => res.status(500).json({ error }))
 })
+
+app.get('/api/v1/cars', (req, res) => {
+  database('cars')
+    .select()
+    .then(cars => res.status(200).json(cars))
+    .catch(error => res.status(500).json({ error }))
+})
