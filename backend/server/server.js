@@ -36,3 +36,14 @@ app.get('/api/v1/cars', (req, res) => {
     .then(cars => res.status(200).json(cars))
     .catch(error => res.status(500).json({ error }))
 })
+
+app.get('/api/v1/cars/:id', (req, res) => {
+  database('cars')
+    .select()
+    .then(cars => {
+      const id = parseInt(req.params.id);
+      const found = cars.find(car => car.id === id);
+      res.status(200).json(found);
+    })
+    .catch(error => res.status(500).json({ error }))
+})
