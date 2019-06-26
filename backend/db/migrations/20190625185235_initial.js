@@ -17,11 +17,11 @@ exports.up = function(knex, Promise) {
       table.foreign('manuf_id').references('manufacturers.id');
       table.string('model');
       table.string('top_speed');
-      table.strings('acceleration');
-      table.strings('capacity');
-      table.strings('charge_time');
-      table.strings('range');
-      table.strings('date_and_sales');
+      table.string('acceleration');
+      table.string('capacity');
+      table.string('charge_time');
+      table.string('range');
+      table.string('date_and_sales');
 
       table.timestamps(true, true);
     })
@@ -29,5 +29,8 @@ exports.up = function(knex, Promise) {
 };
 
 exports.down = function(knex, Promise) {
-  
+  return Promise.all([
+    knex.schema.dropTable('manufacturers'),
+    knex.schema.dropTable('cars')
+  ])
 };
