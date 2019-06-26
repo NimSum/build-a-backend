@@ -8,6 +8,9 @@ module.exports = {
     migrations: {
       directory: './migrations'
     },
+    seeds: {
+      directory: './seeds/dev'
+    },
     useNullAsDefault: true
   }
 
