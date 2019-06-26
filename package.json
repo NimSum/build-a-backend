@@ -1,0 +1,25 @@
+{
+  "name": "build-a-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NimSum/build-a-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NimSum/build-a-backend/issues"
+  },
+  "homepage": "https://github.com/NimSum/build-a-backend#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "knex": "^0.17.6",
+    "pg": "^7.11.0"
+  }
+}
