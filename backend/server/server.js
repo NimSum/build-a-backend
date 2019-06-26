@@ -55,10 +55,18 @@ app.post('/api/v1/manufacturers', (req, res) => {
       error: 'Manufacturer name is required'
     });
   }
-  console.log(newManufacturer);
+  database('manufacturers')
+    .select()
+    .then((manufs) => {
+      if (manufs.some(manuf => manuf.manufacturer === newManufacturer)) {
+        res.status(500).json({ error: 'Manufacturer already exists' })
+      }
+    })
   database('manufacturers')
     .insert({ manufacturer: newManufacturer }, 'id')
-    .then(manufacturer => res.status(201).json(manufacturer))
+    .then(manufacturer => {
+      res.status(201).json(manufacturer);
+    })
     .catch(error => res.status(500).json({ error }))
 })
 
