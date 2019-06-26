@@ -9,7 +9,9 @@ exports.up = function(knex, Promise) {
       table.string('manufacturer');
 
       table.timestamps(true, true);
-    })
+    }),
+    
+    
   ])
 };
 
