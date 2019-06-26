@@ -47,3 +47,19 @@ app.get('/api/v1/cars/:id', (req, res) => {
     })
     .catch(error => res.status(500).json({ error }))
 })
+
+app.post('/api/v1/manufacturers', (req, res) => {
+  const newManufacturer = req.body.manufacturer;
+  if (!newManufacturer) {
+    return res.status(422).send({
+      error: 'Manufacturer name is required'
+    });
+  }
+  console.log(newManufacturer);
+  database('manufacturers')
+    .insert({ manufacturer: newManufacturer }, 'id')
+    .then(manufacturer => res.status(201).json(manufacturer))
+    .catch(error => res.status(500).json({ error }))
+})
+
+
