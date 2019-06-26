@@ -10,8 +10,21 @@ exports.up = function(knex, Promise) {
 
       table.timestamps(true, true);
     }),
-    
-    
+
+    knex.schema.createTable('cars', (table) => {
+      table.increments('id').primary();
+      table.integer('manuf_id').unsigned();
+      table.foreign('manuf_id').references('manufacturers.id');
+      table.string('model');
+      table.string('top_speed');
+      table.strings('acceleration');
+      table.strings('capacity');
+      table.strings('charge_time');
+      table.strings('range');
+      table.strings('date_and_sales');
+
+      table.timestamps(true, true);
+    })
   ])
 };
 
