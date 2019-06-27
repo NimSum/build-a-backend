@@ -153,18 +153,19 @@ app.put('/api/v1/manufacturers/:id', (req, res) => {
   const updated = req.body;
 
   database('manufacturers')
-  .select()
-  .then( (manufs) => {
-    if (!manufs.some(manuf => manuf.id === id)) {
-      res.status(404).json({ error: 'Manufacturer does not exist' })
+  .where({ id })
+  .then(manuf => {
+    if (!manuf || !manuf.length) {
+      res.status(404).json({ error: 'No manufacturer found' })
     } else {
       database('manufacturers')
-        .where({ id })
-        .update({ ...updated }, ['id'])
-        .then(() => res.status(202))
-        .catch(() => res.status(404).json({ error: 'Property does not exist' }))
-    }
-  }).catch(error => res.status(500).json({ error }))
+      .where({ id })
+      .update({ ...updated }, ['id'])
+      .then(() => res.status(202))
+      .catch(() => res.status(404).json({ error: 'Property does not exist' }))
+    };
+  }).catch(error => res.status(500).json({ error }));
+  
 })
 
 app.put('/api/v1/cars/:id', (req, res) => {
@@ -172,16 +173,17 @@ app.put('/api/v1/cars/:id', (req, res) => {
   const updated = req.body;
 
   database('cars')
-  .select()
-  .then( (cars) => {
-    if (!cars.some(car => car.id === id)) {
-      res.status(404).json({ error: 'Car does not exist' })
+  .where({ id })
+  .then(car => {
+    if (!car || !car.length) {
+      res.status(404).json({ error: 'No car found' })
     } else {
       database('cars')
-        .where({ id })
-        .update({ ...updated }, ['id'])
-        .then(() => res.status(202))
-        .catch(() => res.status(404).json({ error: 'Property does not exist' }))
-    }
-  }).catch(error => res.status(500).json({ error }))
+      .where({ id })
+      .update({ ...updated }, ['id'])
+      .then(() => res.status(202))
+      .catch(() => res.status(404).json({ error: 'Property does not exist' }))
+    };
+  }).catch(error => res.status(500).json({ error }));
+
 })
