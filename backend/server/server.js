@@ -157,6 +157,26 @@ app.put('/api/v1/manufacturers/:id', (req, res) => {
         .where({ id })
         .update({ ...updated }, ['id'])
         .then(() => res.status(202))
+        .catch(() => res.status(404).json({ error: 'Property does not exist' }))
+    }
+  }).catch(error => res.status(500).json({ error }))
+})
+
+app.put('/api/v1/cars/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const updated = req.body;
+
+  database('cars')
+  .select()
+  .then( (cars) => {
+    if (!cars.some(car => car.id === id)) {
+      res.status(404).json({ error: 'Car does not exist' })
+    } else {
+      database('cars')
+        .where({ id })
+        .update({ ...updated }, ['id'])
+        .then(() => res.status(202))
+        .catch(() => res.status(404).json({ error: 'Property does not exist' }))
     }
   }).catch(error => res.status(500).json({ error }))
 })
