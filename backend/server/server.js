@@ -124,3 +124,21 @@ app.delete('/api/v1/manufacturers/:id', (req, res) => {
     })
 })
 
+app.delete('/api/v1/cars/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+
+  database('cars')
+    .select()
+    .then( async (cars) => {
+      if (!cars.some(car => car.id === id)) {
+        res.status(404).json({ error: 'Car does not exist' }) 
+      } else {
+        await database('cars')
+          .where({ id })
+          .del()
+        res.status(202)
+      };
+    }).catch(error => {
+      res.status(500).json({ error })
+    })
+})
