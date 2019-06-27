@@ -57,17 +57,17 @@ app.post('/api/v1/manufacturers', (req, res) => {
   }
   database('manufacturers')
     .select()
-    .then((manufs) => {
+    .then( async (manufs) => {
       if (manufs.some(manuf => manuf.manufacturer === newManufacturer)) {
         res.status(400).json({ error: 'Manufacturer already exists' })
+      } else {
+        await database('manufacturers')
+          .insert({ manufacturer: newManufacturer }, 'id')
+          .then(manufacturer => {
+            res.status(201).json(manufacturer);
+          })
       }
-    })
-  database('manufacturers')
-    .insert({ manufacturer: newManufacturer }, 'id')
-    .then(manufacturer => {
-      res.status(201).json(manufacturer);
-    })
-    .catch(error => res.status(500).json({ error }))
+    }).catch(error => res.status(500).json({ error }))
 })
 
 app.post('/api/v1/cars', (req, res) => {
@@ -84,7 +84,7 @@ app.post('/api/v1/cars', (req, res) => {
   ]
 
   for (let requiredParam of format) {
-    if (!newCar[requiredParam] && newCar[requiredParam] !== "" ) {
+    if (!newCar[requiredParam] && !newCar[requiredParam] === "" ) {
       res.status(422).json({ error: 
         `Expected format of ${format.join(', ')}. Missing: ${ requiredParam }`})
     }
@@ -92,15 +92,15 @@ app.post('/api/v1/cars', (req, res) => {
 
   database('cars')
     .select()
-    .then((cars) => {
+    .then( async (cars) => {
       if (cars.some(car => car.model === newCar.model)) {
-        res.status(404).json({ error: 'Car already exists' })
+        res.status(500).json({ error: 'Car already exists' })
+      } else {
+        await database('cars').insert(newCar, 'id')
+          .then(car => res.status(201).json(car))
+          .catch(error => res.status(500).json({ error }))
       }
     })
-
-  database('cars').insert(newCar, 'id')
-    .then(car => res.status(201).json(car))
-    .catch(error => res.status(500).json({ error }))
 })
 
 app.delete('/api/v1/manufacturers/:id', (req, res) => {
@@ -121,3 +121,4 @@ app.delete('/api/v1/manufacturers/:id', (req, res) => {
       res.status(500).json({ error })
     })
 })
+
