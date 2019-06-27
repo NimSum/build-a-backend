@@ -66,19 +66,18 @@ app.post('/api/v1/manufacturers', (req, res) => {
       error: 'Manufacturer name is required'
     });
   }
+
   database('manufacturers')
-    .select()
-    .then( async (manufs) => {
-      if (manufs.some(manuf => manuf.manufacturer === newManufacturer)) {
-        res.status(400).json({ error: 'Manufacturer already exists' })
-      } else {
-        await database('manufacturers')
-          .insert({ manufacturer: newManufacturer }, 'id')
-          .then(manufacturer => {
-            res.status(201).json(manufacturer);
-          })
-      }
-    }).catch(error => res.status(500).json({ error }))
+  .where({ manufacturer: newManufacturer })
+  .then(manuf => {
+    if (!!manuf[0]) {
+      res.status(404).json({ error: 'Manufacturer already exists' })
+    } else {
+      database('manufacturers').insert({ manufacturer: newManufacturer }, 'id')
+      .then(manufId => res.status(201).json(manufId))
+      .catch(error => res.status(500).json({ error }))
+    }
+  }).catch(error => res.status(500).json({ error }));
 })
 
 app.post('/api/v1/cars', (req, res) => {
@@ -102,25 +101,26 @@ app.post('/api/v1/cars', (req, res) => {
   }
 
   database('cars')
-    .select()
-    .then( async (cars) => {
-      if (cars.some(car => car.model === newCar.model)) {
-        res.status(500).json({ error: 'Car already exists' })
+    .where({ model: newCar.model })
+    .then(car => {
+      if (!!car[0]) {
+        res.status(404).json({ error: 'Car already exists' })
       } else {
-        await database('cars').insert(newCar, 'id')
-          .then(car => res.status(201).json(car))
-          .catch(error => res.status(500).json({ error }))
+        database('cars').insert(newCar, 'id')
+        .then(car => res.status(201).json(car))
+        .catch(error => res.status(500).json({ error }))
       }
-    })
+    }).catch(error => res.status(500).json({ error }));
+
 })
 
 app.delete('/api/v1/manufacturers/:id', (req, res) => {
   const id = parseInt(req.params.id);
 
   database('manufacturers')
-    .select()
-    .then( async (manufs) => {
-      if (!manufs.some(manuf => manuf.id === id)) {
+    .where({ id })
+    .then(async manuf => {
+      if (!manuf[0]) {
         res.status(404).json({ error: 'Manufacturer does not exist' }) 
       } else {
         await database('manufacturers')
@@ -128,18 +128,16 @@ app.delete('/api/v1/manufacturers/:id', (req, res) => {
           .del()
         res.status(202)
       };
-    }).catch(error => {
-      res.status(500).json({ error })
-    })
+    }).catch(error => res.status(500).json({ error }));
 })
 
 app.delete('/api/v1/cars/:id', (req, res) => {
   const id = parseInt(req.params.id);
 
   database('cars')
-    .select()
-    .then( async (cars) => {
-      if (!cars.some(car => car.id === id)) {
+    .where({ id })
+    .then(async car => {
+      if (!car[0]) {
         res.status(404).json({ error: 'Car does not exist' }) 
       } else {
         await database('cars')
@@ -147,9 +145,7 @@ app.delete('/api/v1/cars/:id', (req, res) => {
           .del()
         res.status(202)
       };
-    }).catch(error => {
-      res.status(500).json({ error })
-    })
+    }).catch(error => res.status(500).json({ error }));
 })
 
 app.put('/api/v1/manufacturers/:id', (req, res) => {
