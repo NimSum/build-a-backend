@@ -15,8 +15,9 @@ app.listen(port, () => {
 })
 
 app.all('*', (req, res, next) => {
-  const location = geoLocator.lookup('76.120.24.241'); // Denver
+  const location = geoLocator.lookup('207.189.30.171'); // Denver
   // const location = geoLocator.lookup('208.84.155.36'); // Dallas
+  // const location = geoLocator.lookup(req.ip) // Server-side 
   if (location.city === 'Denver' && location.region === 'CO') {
     next();
   } else res.status(403).json({ error: `This api is not available in ${ location.city }, it's only for Denver developers`});
@@ -30,15 +31,24 @@ app.get('/api/v1/manufacturers', (req, res) => {
 })
 
 app.get('/api/v1/manufacturers/:id', (req, res) => {
-  database('manufacturers')
-    .select()
-    .then(manufacturers => {
-      const id = parseInt(req.params.id);
-      const found = manufacturers.find(company => company.id === id);
-      if (!found) res.status(404).json({ error: 'No manufacturer found' })
-      res.status(200).json(found);
+  database('cars')
+    .where({ id: req.params.id })
+    .then(manuf => {
+      if (!manuf || !manuf.length) res.status(404).json({ error: 'No manufacturer found' })
+      else res.status(200).json(manuf);
     })
-    .catch(error => res.status(500).json({ error }))
+    .catch(error => res.status(404).json({ error }));
+
+
+  // database('manufacturers')
+  //   .select()
+  //   .then(manufacturers => {
+  //     const id = parseInt(req.params.id);
+  //     const found = manufacturers.find(company => company.id === id);
+  //     if (!found) res.status(404).json({ error: 'No manufacturer found' })
+  //     res.status(200).json(found);
+  //   })
+  //   .catch(error => res.status(500).json({ error }))
 })
 
 app.get('/api/v1/cars', (req, res) => {
