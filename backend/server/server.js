@@ -2,14 +2,24 @@ const environment = process.env.NODE_ENV || 'development';
 const configuration = require('../db/knexfile')[environment];
 const database = require('knex')(configuration);
 const express = require('express');
+const geoLocator = require('geoip-lite');
 
 const app = express();
 const port = 3000;
 
 app.use(express.json());
+app.set('trust proxy',true);
 
 app.listen(port, () => {
   console.log(`App is running at ${port} 🧐`);
+})
+
+app.all('*', (req, res, next) => {
+  const location = geoLocator.lookup('76.120.24.241'); // Denver
+  // const location = geoLocator.lookup('208.84.155.36'); // Dallas
+  if (location.city === 'Denver' && location.region === 'CO') {
+    next();
+  } else res.status(403).json({ error: `This api is not available in ${ location.city }, it's only for Denver developers`});
 })
 
 app.get('/api/v1/manufacturers', (req, res) => {
