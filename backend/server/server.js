@@ -142,3 +142,21 @@ app.delete('/api/v1/cars/:id', (req, res) => {
       res.status(500).json({ error })
     })
 })
+
+app.put('/api/v1/manufacturers/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const updated = req.body;
+
+  database('manufacturers')
+  .select()
+  .then( (manufs) => {
+    if (!manufs.some(manuf => manuf.id === id)) {
+      res.status(404).json({ error: 'Manufacturer does not exist' })
+    } else {
+      database('manufacturers')
+        .where({ id })
+        .update({ ...updated }, ['id'])
+        .then(() => res.status(202))
+    }
+  }).catch(error => res.status(500).json({ error }))
+})
