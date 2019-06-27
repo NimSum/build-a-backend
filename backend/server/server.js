@@ -25,6 +25,7 @@ app.get('/api/v1/manufacturers/:id', (req, res) => {
     .then(manufacturers => {
       const id = parseInt(req.params.id);
       const found = manufacturers.find(company => company.id === id);
+      if (!found) res.status(404).json({ error: 'No manufacturer found' })
       res.status(200).json(found);
     })
     .catch(error => res.status(500).json({ error }))
@@ -43,6 +44,7 @@ app.get('/api/v1/cars/:id', (req, res) => {
     .then(cars => {
       const id = parseInt(req.params.id);
       const found = cars.find(car => car.id === id);
+      if (!found) res.status(404).json({ error: 'No manufacturer found' })
       res.status(200).json(found);
     })
     .catch(error => res.status(500).json({ error }))
@@ -113,7 +115,7 @@ app.delete('/api/v1/manufacturers/:id', (req, res) => {
         res.status(404).json({ error: 'Manufacturer does not exist' }) 
       } else {
         await database('manufacturers')
-          .where({ id: id.toString() })
+          .where({ id })
           .del()
         res.status(202)
       };
