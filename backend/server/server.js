@@ -5,24 +5,22 @@ const express = require('express');
 const geoLocator = require('geoip-lite');
 
 const app = express();
-const port = 3000;
 
 app.use(express.json());
-app.set('port', process.env.PORT || port)
-app.set('trust proxy',true);
+app.set('port', process.env.PORT || 3000)
 
 app.listen(port, () => {
   console.log(`App is running at ${port} 🧐`);
 })
 
-app.all('*', (req, res, next) => {
-  const location = geoLocator.lookup('207.189.30.171'); // Denver
-  // const location = geoLocator.lookup('208.84.155.36'); // Dallas
-  // const location = geoLocator.lookup(req.ip) // Server-side 
-  if (location.city === 'Denver' && location.region === 'CO') {
-    next();
-  } else res.status(403).json({ error: `This api is not available in ${ location.city }, it's only for Denver developers`});
-})
+// app.all('*', (req, res, next) => {
+//   // const location = geoLocator.lookup('207.189.30.171'); // Denver
+//   // const location = geoLocator.lookup('208.84.155.36'); // Dallas
+//   const location = geoLocator.lookup(req.ip) // Server-side 
+//   if (location.city === 'Denver' && location.region === 'CO') {
+//     next();
+//   } else res.status(403).json({ error: `This api is not available in ${ location.city }, it's only for Denver developers`});
+// })
 
 app.get('/api/v1/manufacturers', (req, res) => {
   database('manufacturers')
