@@ -7,15 +7,16 @@ const geoLocator = require('geoip-lite');
 const app = express();
 
 app.use(express.json());
-// app.set('port', process.env.PORT || 3000)
+const port = process.env.PORT || 3000;
+app.set('port', process.env.PORT || 3000)
 
-// app.listen(port, () => {
-//   console.log(`App is running at ${port} 🧐`);
-// })
+app.listen(port, () => {
+  console.log(`App is running at ${port} 🧐`);
+})
 
-app.listen(process.env.PORT || 3000, function() {
-  console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
-});
+// app.listen(process.env.PORT || 3000, function() {
+//   console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+// });
 
 // app.all('*', (req, res, next) => {
 //   // const location = geoLocator.lookup('207.189.30.171'); // Denver
