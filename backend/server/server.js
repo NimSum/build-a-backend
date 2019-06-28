@@ -8,6 +8,7 @@ const app = express();
 const port = 3000;
 
 app.use(express.json());
+app.set('port', process.env.PORT || port)
 app.set('trust proxy',true);
 
 app.listen(port, () => {
