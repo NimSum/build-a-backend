@@ -26,6 +26,10 @@ app.listen(process.env.PORT || 3000, function() {
 //   } else res.status(403).json({ error: `This api is not available in ${ location.city }, it's only for Denver developers`});
 // })
 
+app.get('/', (req, res) => {
+  res.status(200).send('hellooooooooo nimsumm')
+})
+
 app.get('/api/v1/manufacturers', (req, res) => {
   database('manufacturers')
     .select()
