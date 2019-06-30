@@ -105,3 +105,60 @@
 }
 ```
 
+
+### `POST: /api/v1/manufacturers`
+  * This endpoint creates a new manufacturer in the database
+  * Responds with the new manufacturer id posted if successfull
+  
+#### Required Request Body Props 
+- manufacturer
+
+
+### `POST: /api/v1/cars`
+  * This endpoint creates a new car in the database
+  * Responds with the new car id posted if successfull
+  
+#### Required Request Body Props 
+- manuf_id
+- model
+- top_speed
+- acceleration
+- capacity
+- charge_time
+- range
+- date_and_sales
+
+
+
+### `DELETE: /api/v1/manufacturers/:id`
+  * This endpoint expects an param to be passed in the url, the id represents the id of a single manufacturer to be deleted
+  * Successfull deletion has a response status code of 202
+
+
+### `DELETE: /api/v1/cars/:id`
+  * This endpoint expects an param to be passed in the url, the id represents the id of a single car to be deleted
+  * Successfull deletion has a response status code of 202
+
+
+
+### `PUT: /api/v1/manufacturers/:id`
+  * This endpoint expects an param to be passed in the url, the id represents the id of a single manufacturer to be edited
+  * Successfull edits has a response status code of 202
+  
+#### Required Request Body Props
+- manufacturer
+
+### `PUT: /api/v1/cars/:id`
+* This endpoint expects an param to be passed in the url, the id represents the id of a single car to be edited
+* Successfull edits has a response status code of 202
+
+#### Required Request Body Props 
+* NOTE: All of the props below are optional BUT at least one prop has to be sent for the editing process to complete
+- manuf_id
+- model
+- top_speed
+- acceleration
+- capacity
+- charge_time
+- range
+- date_and_sales
