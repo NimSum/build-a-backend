@@ -2,7 +2,7 @@ const environment = process.env.NODE_ENV || 'development';
 const configuration = require('../../knexfile')[environment];
 const database = require('knex')(configuration);
 const express = require('express');
-const geoLocator = require('geoip-lite');
+// const geoLocator = require('geoip-lite');
 
 const app = express();
 
@@ -14,10 +14,6 @@ app.listen(port, () => {
   console.log(`App is running at ${port} 🧐`);
 })
 
-// app.listen(process.env.PORT || 3000, function() {
-//   console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
-// });
-
 // app.all('*', (req, res, next) => {
 //   // const location = geoLocator.lookup('207.189.30.171'); // Denver
 //   // const location = geoLocator.lookup('208.84.155.36'); // Dallas
@@ -26,10 +22,6 @@ app.listen(port, () => {
 //     next();
 //   } else res.status(403).json({ error: `This api is not available in ${ location.city }, it's only for Denver developers`});
 // })
-
-app.get('/', (req, res) => {
-  res.status(200).send('hellooooooooo nimsumm')
-})
 
 app.get('/api/v1/manufacturers', (req, res) => {
   database('manufacturers')
@@ -43,7 +35,7 @@ app.get('/api/v1/manufacturers/:id', (req, res) => {
     .where({ id: req.params.id })
     .then(manuf => {
       if (!manuf || !manuf.length) res.status(404).json({ error: 'No manufacturer found' })
-      else res.status(200).json(manuf);
+      else res.status(200).json(...manuf);
     })
     .catch(error => res.status(500).json({ error }));
 
@@ -61,7 +53,7 @@ app.get('/api/v1/cars/:id', (req, res) => {
   .where({ id: req.params.id })
   .then(car => {
     if (!car || !car.length) res.status(404).json({ error: 'No car found' })
-    else res.status(200).json(car);
+    else res.status(200).json(...car);
   })
   .catch(error => res.status(500).json({ error }));
   
